@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Account Settings
+{% endblock %}
+
+{% block main %}
+<form action="/settings" method="post" name="change">
+    <h1>Change password</h1>
+    <input class="form-control mb-2" type="password" name="pass1" placeholder="Old password">
+    <input type="password" class="form-control mb-2 password" name="pass2" placeholder="New password">
+    <input type="password" class="form-control mb-2 confirm" name="pass3" placeholder="Confirm password">
+    <button type="submit" class="btn btn-success mb-2 checkPass" name="change">Change Password</button>
+</form>
+<form action="/settings" method="post" name="delete">
+    <h1>Delete account</h1>
+    <button type="submit" class="btn btn-danger" name="delete">Delete</button>
+</form>
+{% endblock %}

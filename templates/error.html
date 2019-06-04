@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Error
+{% endblock %}
+
+{% block main %}
+<div class="alert">
+    <h1>Something's wrong: {{ errorCode }}</h1>
+    <p>{{ message }}</p>
+</div>
+{% endblock %}

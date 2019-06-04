@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block main %}
+<form action="/log_reg" method="post" name="login">
+    <input type="hidden" name="login">
+    <input name="logUser" class="form-control my-2 user" type="text" placeholder="Username" autocomplete="username">
+    <input name="logPass" class="form-control my-2" type="password" placeholder="Password" autocomplete="current-password">
+    <button type="submit" class="btn btn-success my-2 checkUser" name="login">Login</button>
+</form>
+<hr>
+<form action="/log_reg" method="post" name="register">
+    <input type="hidden" name="register">
+    <input name="regUser" class="form-control my-2 user" type="text" placeholder="Username">
+    <input name="regPass" class="form-control my-2 password" type="password" placeholder="Password">
+    <input name="regConf" class="form-control my-2 confirm" type="password" placeholder="Confirm Password">
+    <button type="submit" class="btn btn-success my-2 checkUser" name="register">Register</button>
+</form>
+{% endblock %}

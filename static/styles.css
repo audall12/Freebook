@@ -1,0 +1,64 @@
+
+.bookcase-outer {
+    border: solid 3px black;
+    padding: 20px;
+    background-color: #ddbbaa;
+}
+.bookcase-inner {
+    border: solid 1px black;
+}
+.shelf {
+    border: solid 2px black;
+    min-height: 200px;
+    background-color: #886655;
+}
+main {
+    padding: 50px;
+}
+.navbar-brand {
+    font-size: xx-large;
+}
+h1 {
+    color: green;
+}
+nav .navbar-brand .orange
+{
+    color: darkorange;
+}
+nav .navbar-brand .green
+{
+    color: green;
+}
+.continue-reading {
+    width: 50%;
+    padding: 20px;
+    background-color: lightgreen;
+}
+.continue-reading p {
+    font-size: 50px;
+    color: white;
+}
+
+.shelfWrapper{
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+.modal-body {
+    overflow: hidden;
+    white-space: normal;
+}
+.imgModal:active {
+    border: solid 2px green;
+}
+.startReading:active{
+    border: solid 2px green;
+}
+.sidebar {
+    overflow: scroll;
+    width: 25%;
+    height: 100vh;
+}
+.green {
+    color: green;
+}

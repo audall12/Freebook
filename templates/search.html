@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Search
+{% endblock %}
+
+{% block main %}
+<div>
+    <h1>Search results for:</h1>
+    <h2 id="queryText">{{ query }}</h2>
+    <h1>Refine search:</h1>
+    <form action="/search" method="post">
+        <input class="form-control" name="query" type="text" value="{{ query }}" style="display:none;">
+        <input class="form-control mb-2" name="refineQuery" type="text" placeholder="Author, Title...">
+        <label for="#select">Search in:</label>
+        <select class="form-control mb-2" name="refine" id="select">
+                <option value="" selected disabled>Select</option>
+                <option value="inauthor">Author</option>
+                <option value="intitle">Title</option>
+                <option value="inpublisher">Publisher</option>
+                <option value="subject">Subject</option>
+        </select>
+        <button class="btn btn-outline-success" type="submit"><i class="fa fa-search" id="refineButton"></i> Refine search</button>
+    </form>
+    <hr>
+    <div class="container">
+        {% if results != "" %}
+            {% for book in results %}
+            <div class="row my-2">
+                <div class="col">
+                        {{ bookLink(book) }}
+                </div>
+                <div class="col-10">
+                    {% if book["title"] %}
+                        <p>Title: '{{ book["title"] }}'</p>
+                    {% endif %}
+                    {% if book["authors"] %}
+                        <p>Authors: {{ book["authors"] }}</p>
+                    {% endif %}
+                    {% if book["publishedDate"] %}
+                        <p>Date published: {{book["publishedDate"] }}</p>
+                    {% endif %}
+                    {% if book["description"] %}
+                        <p>Description: <span id="{{ book['bookId'] }}">{{ book["description"]|safe }}</span></p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success appendBookcase" name="{{ book['bookId'] }}">Add to Bookcase</button>
+                    <button type="submit" class="btn btn-success appendFinished" name="{{ book['bookId'] }}">I've read this</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="container">
+                <p>{{ message }}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

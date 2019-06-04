@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+My Book
+{% endblock %}
+
+{% block main %}
+
+<div class="text-center container" onscroll='page()'>
+    {% if not firstBook %}
+    <div><h1>You're not reading anything yet, go have a search</h1></div>
+    {% else %}
+    <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+    <script type="text/javascript">
+      let viewer = null;
+      google.books.load();
+      let bookId = "{{ firstBook['bookId']|safe }}";
+      let page = "{{ firstBook['page']|safe }}";
+      console.log(page)
+
+      function initialize() {
+        viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+        viewer.load(bookId, bookNotFound, loadPage);
+        getPage();
+      }
+
+      function loadPage()
+      {
+        if (page != 'None')
+         {
+           console.log('before if');
+           if (!viewer) return;
+           console.log(viewer);
+           viewer.goToPage(page);
+         }
+      }
+
+      function getPage(){
+        window.setTimeout(function() {
+          if(viewer.getPageNumber())
+          {
+            let success = $.getJSON('/pageUpdate', {page:viewer.getPageNumber(), bookId: bookId}, function(data){});
+          }
+         getPage(viewer);
+        }, 3000);
+      }
+
+      function bookNotFound() {
+      document.getElementById('viewerCanvas').innerHTML="<h1>Oh no! Looks like this book isn't actually free to preview!</h1>";
+        }
+
+      google.books.setOnLoadCallback(initialize);
+      /*$(function(){
+        $('#testPage').on('click', function(){console.log(viewer.getPageNumber())});
+      });
+      google.books.load();
+
+      function nextStep(viewer) {
+        window.setTimeout(function() {
+         viewer.nextPage();
+         nextStep(viewer);
+        }, 3000);
+      }
+
+      function initialize() {
+        var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+        viewer.load('ISBN:0738531367');
+        nextStep(viewer);
+      }
+*/
+    </script>
+    <div class="row">
+        <div class="d-inline-block sidebar col-sm-2">
+            {% for book in reading %}
+			<div class="my-3">
+              {{ bookLink(book) }}
+              {{ book['title'] }}
+			</div>
+            {% endfor %}
+        </div>
+      <div class="col" id='test'>
+        <div class="d-inline-block" id="viewerCanvas" style="width: 75%; height: 100vh"></div>
+      </div>
+    </div>
+    <script>
+      //window.addEventListener('scroll', function(){ console.log(google.books.getPageNumber()); }, { passive:true } );
+    </script>
+    {% endif %}
+</div>
+{% endblock %}

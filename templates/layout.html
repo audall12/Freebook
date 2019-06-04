@@ -1,0 +1,177 @@
+{% from "macros.html" import modal with context %}
+{% from "macros.html" import bookLink with context %}
+<!DOCTYPE html>
+
+<html lang=en>
+    <head>
+        <!--meta data-->
+        <meta charset="utf-8">
+        <meta name="viewport" cont="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!--bootstrap-->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!--style-->
+        <link href="static/styles.css" rel="stylesheet">
+
+        <!--bootstrap/jquery-->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+        <title>Freebook: {% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light p-4 border-bottom">
+                <a class="navbar-brand" href="/"><span class="orange">Fre</span><span class="green">ebook</span></a>
+                <button class="navbar-toggler green" type="button" data-toggle="collapse" data-target="#navLinks">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navLinks">
+                    {% if session.user_id %}
+                    <ul class="navbar-nav nav-pills ml-auto">
+                        <form class="form-inline" action="/search" method="get">
+                            <div class="input-group mr-2">
+                                <input type="text" class="form-control" name="query" placeholder="Search for books..." aria-label="Search" aria-describedby="search-button">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <li class="nav-item dropdown mr-2"><a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">My Account</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/reading?bookId=">Continue Reading</a>
+                                <a class="dropdown-item" href="/bookcase">My Bookcase</a>
+                                <a class="dropdown-item" href="/settings">Account Settings</a>
+                            </div>
+                        </li>
+                        <li class="nav-item"><a href="/logout" class="nav-link">Log Out</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav nav-pills ml-auto">
+                        <li class="nav-item"><a href="/log_reg" class="nav-link">Login/Register</a></li>
+                    </ul>
+                    {% endif %}
+                </div>
+        </nav>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <header>
+                {% for category, message in messages %}
+                    <div class="alert {{ category }} text-center" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </header>
+            {% endif %}
+        {% endwith %}
+        <div class="alert alert-danger text-center" style="display:none;" id="alert-danger"></div>
+        <div class="alert alert-success text-center" style="display:none;" id="alert-success"></div>
+        <main class="container pb-5">
+            {% block main %}
+            {% endblock %}
+
+            <script type=text/javascript>
+                $(function() {
+
+                    $('.appendBookcase').on('click', function() {
+                        let response = $.getJSON('/appendBookcase', { bookId: this.name });
+                        response.done(function(json) {
+                            if (json == true){
+                                $("#alert-danger").hide();
+                                $("#alert-success").hide();
+                                $("#alert-success").html('Book added to Bookcase!');
+                                $("#alert-success").show();
+                            }
+                            else {
+                                $('#alert-success').hide();
+                                $("#alert-danger").hide();
+                                $("#alert-danger").html('This book is already in your Bookcase!');
+                                $("#alert-danger").show();
+                            }
+                        });
+                        return false;
+                    });
+                    $('.appendFinished').on('click', function() {
+                        let response = $.getJSON('/appendFinished', { bookId: this.name });
+                        response.done(function(json) {
+                            if (json == true){
+                                $("#alert-danger").hide();
+                                $("#alert-success").hide();
+                                $("#alert-success").html('Book added to Finished list!');
+                                $("#alert-success").show();
+                            }
+                            else {
+                                $('#alert-success').hide();
+                                $("#alert-danger").hide();
+                                $("#alert-danger").html('This book is already in your Finished List!');
+                                $("#alert-danger").show();
+                            }
+                        });
+                        return false;
+                    });
+
+                    $(".checkUser").click(function(event){
+
+                        event.preventDefault();
+
+                        let username = $(this).closest('form').children('.user')[0].value;
+                        let formName = this.name;
+                        let button = this;
+                        let valid = $.get("/checkUser", { user: username, form: formName });
+
+                        valid.done(function(json) {
+                            if (json != true & formName == 'login')
+                            {
+                                $('#alert-success').hide();
+                                $("#alert-danger").hide();
+                                $("#alert-danger").html('<strong>Username not recognised</strong>');
+                                $("#alert-danger").show();
+                            }
+                            else if (json != true & formName == 'register')
+                            {
+                                $('#alert-success').hide();
+                                $("#alert-danger").hide();
+                                $("#alert-danger").html('<strong>Username unavailable</strong>');
+                                $("#alertidanger").show();
+                            }
+                            else
+                            {
+                                button.form.submit()
+                            }
+                        });
+                    });
+
+                  /*$(".checkPass").click(function(event){
+
+                        event.preventDefault();
+
+                        let password = $(this).closest('form').children('.password')[0].value
+                        let confirm = $(this).closest('form').children('.confirm')[0].value
+                        var valid = $.get("/checkPass", { password: password, confirm: confirm });
+
+                        valid.done(function(json) {
+                            if (json != true)
+                            {
+                                $("#alert").html('Passwords do not match!');
+                                $("#alert").show();
+                            }
+                            else
+                            {
+                                $(this).closest('form').submit();
+                            }
+                        });
+                    });    */
+                });
+            </script>
+        </main style="padding=50px">
+        <footer class="page-footer text-center">
+            <div class="container">
+                Data provided by <a href="https://books.google.co.uk/">Google Books</a>
+            </div>
+        </footer>
+    </body>
+</html>
+

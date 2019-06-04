@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+<div>
+    <h1 class="my-5 text-center font-weight-light"> Your Bookcase</h1>
+    <div class="bookcase-outer">
+        <div class="bookcase-inner">
+            <div class="shelf d-flex justify-content-around align-items-end">
+                <div class="">
+                    {% if bookcase %}
+                        {% for book in bookcase %}
+                            {% if book %}
+                                {{ modal(book, false, true) }}
+                            {% else %}
+                                no results for bookcase
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if finished %}
+                        {% for book in finished %}
+                            {% if book %}
+                                {{ modal(book, true, true) }}
+                            {% else %}
+                                no results for finished
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if not bookcase and not finished %}
+                    <h2>You haven't added any books to your shelf, go have a search</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+                    {% else %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="my-5 text-center font-weight-light green">You can amend your collection in <a href="/bookcase">your Bookcase</a>, in your Account</p>
+                {% endif %}
+    {% if readingBook %}
+    <a href="/reading?bookId={{ readingBook['bookId'] }}">
+        <div  class="continue-reading text-center rounded mx-auto mt-5">
+            <p>Continue reading <br> "{{ readingBook['title'] }}"?</p>
+        </div>
+    </a>
+    {% else %}
+    <a href="/reading?bookId={{ readingBook['bookId'] }}">
+        <div href="/bookcase" class="continue-reading text-center rounded mx-auto mt-5">
+            <p>You're not reading anything yet, why don't you select a book?</p>
+        </div>
+    </a>
+
+    {% endif %}
+</div>
+{% endblock %}

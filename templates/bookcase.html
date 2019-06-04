@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+My Bookcase
+{% endblock %}
+
+{% block main %}
+<h1>To Read</h1>
+<div class="shelfWrapper">
+    {% for book in bookcase %}
+        {% if book %}
+            {{ modal(book, false, false) }}
+        {% else %}
+            no book
+        {% endif %}
+    {% endfor %}
+</div>
+<h1>Books you've read</h1>
+<div class="shelfWrapper">
+    {% for book in finished %}
+        {% if book %}
+            {{ modal(book, true, false) }}
+        {% else %}
+            no book
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
