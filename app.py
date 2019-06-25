@@ -1,6 +1,5 @@
 import json
 
-from try_test import testA, testB, testC
 from cs50 import SQL
 from datetime import timedelta, datetime
 from extras import get_key, booksearch, error, is_logged_in, getBookInfo
